@@ -60,7 +60,7 @@ func init() {
 	conf = &config{
 		level:       LevelInfo,
 		hostName:    hostName,
-		serviceName: "root",
+		serviceName: "",
 		dir:         "./log",
 		showfile:    true,
 		day:         time.Now().Format("2006-01-02"),
@@ -127,10 +127,13 @@ func (cf *config) open() (*os.File, error) {
 	filename.WriteString(conf.dir)
 	filename.WriteByte('/')
 	filename.WriteString(conf.hostName)
-	filename.WriteByte('.')
-	filename.WriteString(conf.serviceName)
+	if conf.serviceName == "" {
+		filename.WriteByte('.')
+		filename.WriteString(conf.serviceName)
+	}
 	filename.WriteByte('.')
 	filename.WriteString(conf.day)
+	filename.WriteString(".log")
 
 	return getFp(filename.String())
 }

@@ -167,6 +167,7 @@ func (l *Logger) SetServiceName(serviceName string) {
 	filename.WriteString(serviceName)
 	filename.WriteByte('.')
 	filename.WriteString(conf.day)
+	filename.WriteString(".log")
 	if fp, err := getFp(filename.String()); err == nil {
 		l.fp = fp
 	}
