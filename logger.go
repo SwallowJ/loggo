@@ -98,17 +98,17 @@ func (l *Logger) Output(level LogLevel, s string) {
 
 // Println calls Output to print to the standard logger.
 func (l *Logger) Println(v ...interface{}) {
-	std.Output(LevelInfo, fmt.Sprintln(v...))
+	l.Output(LevelInfo, fmt.Sprintln(v...))
 }
 
 //Printf format print
 func (l *Logger) Printf(format string, v ...interface{}) {
-	std.Output(LevelInfo, fmt.Sprintf(format, v...)+"\n")
+	l.Output(LevelInfo, fmt.Sprintf(format, v...)+"\n")
 }
 
 //Debug print Debug message
 func (l *Logger) Debug(v ...interface{}) {
-	std.Output(LevelDebug, fmt.Sprintln(v...))
+	l.Output(LevelDebug, fmt.Sprintln(v...))
 }
 
 //Info print info message

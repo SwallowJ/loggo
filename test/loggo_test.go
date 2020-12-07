@@ -13,6 +13,6 @@ func Test_config(t *testing.T) {
 
 	// logger.Error("HAHA")
 
-	loggo.Debug("Test123")
-	loggo.Info("aaa")
+	logger.Debug("Test123")
+	logger.Info("aaa")
 }

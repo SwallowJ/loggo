@@ -51,7 +51,6 @@ type Logger struct {
 
 var (
 	conf      *config
-	std       *Logger
 	mu        sync.Mutex
 	loggerMap map[string]*Logger
 )
@@ -66,7 +65,6 @@ func init() {
 		showfile:    true,
 		day:         time.Now().Format("2006-01-02"),
 	}
-	std = New("main")
 }
 
 //New return new logger
@@ -96,9 +94,6 @@ func New(name string) *Logger {
 //SetDir 设置日志文件
 func SetDir(dir string) {
 	conf.dir = dir
-	if fp, err := conf.open(); err == nil {
-		std.fp = fp
-	}
 }
 
 //SetLevel 设置默认level, default="INFO"
