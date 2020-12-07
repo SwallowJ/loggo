@@ -35,15 +35,17 @@ type config struct {
 	hostName    string
 	dir         string
 	level       LogLevel
+	showfile    bool
 }
 
 //Logger Logger
 type Logger struct {
-	out   io.Writer // destination for output
-	buf   []byte    // for accumulating text to write
-	level LogLevel
-	fp    *os.File
-	name  string //logger name
+	out      io.Writer // destination for output
+	buf      []byte    // for accumulating text to write
+	level    LogLevel
+	fp       *os.File
+	name     string //logger name
+	showfile bool   //是否显示文件
 }
 
 var (
@@ -60,6 +62,7 @@ func init() {
 		hostName:    hostName,
 		serviceName: "root",
 		dir:         "./log",
+		showfile:    true,
 	}
 	std = New("main")
 }
@@ -75,9 +78,10 @@ func New(name string) *Logger {
 	}
 
 	logger := &Logger{
-		level: conf.level,
-		out:   os.Stderr,
-		name:  name,
+		level:    conf.level,
+		out:      os.Stderr,
+		name:     name,
+		showfile: conf.showfile,
 	}
 
 	if fp, err := conf.open(); err == nil {
@@ -158,6 +162,11 @@ func Clear() {
 		l.Close()
 	}
 	loggerMap = make(map[string]*Logger)
+}
+
+//ShowFile 是否展示文件名及行号
+func ShowFile(show bool) {
+	conf.showfile = show
 }
 
 func trace(v ...interface{}) string {

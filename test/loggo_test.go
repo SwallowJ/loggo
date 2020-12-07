@@ -1,8 +1,9 @@
 package test
 
 import (
-	"loggo"
 	"testing"
+
+	"github.com/SwallowJ/loggo"
 )
 
 func Test_config(t *testing.T) {

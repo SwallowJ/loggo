@@ -50,26 +50,35 @@ func (l *Logger) formatter(file, s string, line int, level LogLevel) {
 	l.buf = append(l.buf, []byte(l.name)...)
 	l.buf = append(l.buf, ']')
 
-	short := file
-	for i := len(file) - 1; i > 0; i-- {
-		if file[i] == '/' {
-			short = file[i+1:]
-			break
+	if l.showfile {
+		short := file
+		for i := len(file) - 1; i > 0; i-- {
+			if file[i] == '/' {
+				short = file[i+1:]
+				break
+			}
 		}
+		l.buf = append(l.buf, '[')
+		l.buf = append(l.buf, short...)
+		l.buf = append(l.buf, ':')
+		l.itoa(line, -1, ']')
 	}
-	l.buf = append(l.buf, '[')
-	l.buf = append(l.buf, short...)
-	l.buf = append(l.buf, ':')
-	l.itoa(line, -1, ']', ' ')
+
+	l.buf = append(l.buf, ' ')
 	l.buf = append(l.buf, s...)
 }
 
 //Output Output
 func (l *Logger) Output(level LogLevel, s string) {
-	_, file, line, ok := runtime.Caller(2)
-	if !ok {
-		file = "???"
-		line = 0
+	var file string
+	var line int
+	var ok bool
+	if l.showfile {
+		_, file, line, ok = runtime.Caller(2)
+		if !ok {
+			file = "???"
+			line = 0
+		}
 	}
 
 	mu.Lock()
@@ -136,4 +145,9 @@ func (l *Logger) Close() {
 func (l *Logger) SetLevel(level LogLevel) *Logger {
 	l.level = level
 	return l
+}
+
+//ShowFile 是否展示文件名及行号
+func (l *Logger) ShowFile(show bool) {
+	l.showfile = show
 }
