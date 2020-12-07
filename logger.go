@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -150,4 +151,23 @@ func (l *Logger) SetLevel(level LogLevel) *Logger {
 //ShowFile 是否展示文件名及行号
 func (l *Logger) ShowFile(show bool) {
 	l.showfile = show
+}
+
+//SetServiceName 设置服务名
+func (l *Logger) SetServiceName(serviceName string) {
+	if l.fp != nil {
+		l.fp.Close()
+		l.fp = nil
+	}
+	var filename strings.Builder
+	filename.WriteString(conf.dir)
+	filename.WriteByte('/')
+	filename.WriteString(conf.hostName)
+	filename.WriteByte('.')
+	filename.WriteString(serviceName)
+	filename.WriteByte('.')
+	filename.WriteString(conf.day)
+	if fp, err := getFp(filename.String()); err == nil {
+		l.fp = fp
+	}
 }

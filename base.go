@@ -36,6 +36,7 @@ type config struct {
 	dir         string
 	level       LogLevel
 	showfile    bool
+	day         string
 }
 
 //Logger Logger
@@ -63,6 +64,7 @@ func init() {
 		serviceName: "root",
 		dir:         "./log",
 		showfile:    true,
+		day:         time.Now().Format("2006-01-02"),
 	}
 	std = New("main")
 }
@@ -125,8 +127,20 @@ func (cf *config) open() (*os.File, error) {
 		return nil, err
 	}
 
-	filename := fmt.Sprintf("%s/%s.%s.%s.log", conf.dir, conf.hostName, conf.serviceName, time.Now().Format("2006-01-02"))
+	var filename strings.Builder
 
+	filename.WriteString(conf.dir)
+	filename.WriteByte('/')
+	filename.WriteString(conf.hostName)
+	filename.WriteByte('.')
+	filename.WriteString(conf.serviceName)
+	filename.WriteByte('.')
+	filename.WriteString(conf.day)
+
+	return getFp(filename.String())
+}
+
+func getFp(filename string) (*os.File, error) {
 	if !exists(filename) {
 		return os.Create(filename)
 	}
@@ -183,4 +197,9 @@ func trace(v ...interface{}) string {
 	}
 	str.WriteString("\n")
 	return str.String()
+}
+
+//SetServiceName 设置服务名
+func SetServiceName(serviceName string) {
+	conf.serviceName = serviceName
 }
